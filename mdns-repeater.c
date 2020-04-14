@@ -106,6 +106,10 @@ static int create_recv_sock() {
 		log_message(LOG_ERR, "recv setsockopt(SO_REUSEADDR): %s", strerror(errno));
 		return r;
 	}
+	if ((r = setsockopt(sd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on))) < 0) {
+		log_message(LOG_ERR, "recv setsockopt(SO_REUSEPORT): %s", strerror(errno));
+		return r;
+	}
 
 	/* bind to an address */
 	struct sockaddr_in serveraddr;
@@ -123,9 +127,9 @@ static int create_recv_sock() {
 		return r;
 	}
 
-#ifdef IP_PKTINFO
-	if ((r = setsockopt(sd, SOL_IP, IP_PKTINFO, &on, sizeof(on))) < 0) {
-		log_message(LOG_ERR, "recv setsockopt(IP_PKTINFO): %s", strerror(errno));
+#ifdef IP_RECVDSTADDR
+	if ((r = setsockopt(sd, IPPROTO_IP, IP_RECVDSTADDR, &on, sizeof(on))) < 0) {
+		log_message(LOG_ERR, "recv setsockopt(IP_RECVDSTADDR): %s", strerror(errno));
 		return r;
 	}
 #endif
@@ -175,6 +179,10 @@ static int create_send_sock(int recv_sockfd, const char *ifname, struct if_sock 
 		log_message(LOG_ERR, "send setsockopt(SO_REUSEADDR): %s", strerror(errno));
 		return r;
 	}
+	if ((r = setsockopt(sd, SOL_SOCKET, SO_REUSEPORT, &on, sizeof(on))) < 0) {
+		log_message(LOG_ERR, "send setsockopt(SO_REUSEPORT): %s", strerror(errno));
+		return r;
+	}
 
 	// bind to an address
 	struct sockaddr_in serveraddr;
@@ -185,6 +193,12 @@ static int create_send_sock(int recv_sockfd, const char *ifname, struct if_sock 
 	if ((r = bind(sd, (struct sockaddr *)&serveraddr, sizeof(serveraddr))) < 0) {
 		log_message(LOG_ERR, "send bind(): %s", strerror(errno));
 	}
+
+#if __APPLE__
+	if((r = setsockopt(sd, IPPROTO_IP, IP_MULTICAST_IF, &serveraddr.sin_addr, sizeof(serveraddr.sin_addr))) < 0) {
+		log_message(LOG_ERR, "send ip_multicast_if(): errno %d: %s", errno, strerror(errno));
+	}
+#endif
 
 #if __FreeBSD__
 	if((r = setsockopt(sd, IPPROTO_IP, IP_MULTICAST_IF, &serveraddr.sin_addr, sizeof(serveraddr.sin_addr))) < 0) {
