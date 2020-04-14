@@ -1,7 +1,7 @@
 class MdnsRepeater < Formula
   desc "Multicast DNS repeater"
   homepage "https://github.com/kradalby/mdns-repeater"
-  head "https://github.com/kradalby/mdns-repeater/archive/master.zip"
+  head "https://github.com/kradalby/mdns-repeater.git"
 
   def install
     system "make"
