@@ -1,5 +1,14 @@
 mdns-repeater
 ==============
+
+
+CREDIT
+------
+This is forked from: https://github.com/kennylevinsen/mdns-repeater
+Includes patches from: https://github.com/Homebrew/homebrew-core/blob/d8f141e0a3c4b51002374f29d441f1bfb769fa2c/Formula/mdns-repeater.rb
+and the original work is here: https://bitbucket.org/geekman/mdns-repeater/src/default/
+
+
 mdns-repeater is a Multicast DNS repeater for Linux. Multicast DNS uses the 
 224.0.0.51 address, which is "administratively scoped" and does not 
 leave the subnet.
