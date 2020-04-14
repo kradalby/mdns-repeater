@@ -22,6 +22,15 @@ Since the mDNS protocol sends the AA records in the packet itself, the
 repeater does not need to forge the source address. Instead, the source 
 address is of the interface that repeats the packet.
 
+INSTALL
+-------
+
+Install with `brew` on macOS:
+
+```
+brew install kradalby/homebrew-tap/mdns-repeater --HEAD
+```
+
 
 USAGE
 -----
